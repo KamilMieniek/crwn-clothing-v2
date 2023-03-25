@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
@@ -21,14 +21,17 @@ const SignUpForm = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handlechange = (event) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { displayName, email, password, confirmPassword } = formFields;
-    if (password !== confirmPassword) return;
+    if (password !== confirmPassword) {
+      alert("Passwords don't match!");
+      return;
+    }
     try {
       const { user } = await createAuthUserWithEmailAndPassword(
         email,
@@ -38,12 +41,11 @@ const SignUpForm = () => {
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
     } catch (error) {
-      if (error.code == 'auth/email-already-in-ude') {
+      if (error.code === 'auth/email-already-in-ude') {
         alert('Cannot create user, email already in use');
       }
     }
   };
-
   return (
     <div className="sign-up-container">
       <h2> Don't have an account?</h2>
@@ -55,7 +57,7 @@ const SignUpForm = () => {
             type: 'text',
             name: 'displayName',
             value: displayName,
-            onChange: handlechange,
+            onChange: handleChange,
           }}
         />
         <FormInput
@@ -65,7 +67,7 @@ const SignUpForm = () => {
             type: 'email',
             name: 'email',
             value: email,
-            onChange: handlechange,
+            onChange: handleChange,
           }}
         />
         <FormInput
@@ -75,7 +77,7 @@ const SignUpForm = () => {
             type: 'password',
             name: 'password',
             value: password,
-            onChange: handlechange,
+            onChange: handleChange,
           }}
         />
         <FormInput
@@ -85,7 +87,7 @@ const SignUpForm = () => {
             type: 'password',
             name: 'confirmPassword',
             value: confirmPassword,
-            onChange: handlechange,
+            onChange: handleChange,
           }}
         />
 

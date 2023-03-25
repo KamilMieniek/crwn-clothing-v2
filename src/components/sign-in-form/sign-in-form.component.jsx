@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
@@ -17,24 +16,19 @@ const SignInForm = () => {
 
   const { email, password } = formFields;
 
-  const resetFormFields = () => {
-    setFormFields(defaultFormFields);
-  };
+  // const resetFormFields = () => {
+  //   setFormFields(defaultFormFields);
+  // };
 
   const handlechange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
   };
   const handleSubmit = async (event) => {
-    console.log('handleSubmit');
     event.preventDefault();
     const { email, password } = formFields;
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log(response);
+      await signInAuthUserWithEmailAndPassword(email, password);
     } catch (error) {
       switch (error.code) {
         case 'auth/wrong-password':
@@ -49,8 +43,7 @@ const SignInForm = () => {
     }
   };
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
   };
 
   return (
